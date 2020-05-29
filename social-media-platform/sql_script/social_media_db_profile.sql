@@ -23,7 +23,6 @@ DROP TABLE IF EXISTS `profile`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `profile` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `firstname` varchar(25) NOT NULL,
   `lastname` varchar(25) NOT NULL,
   `time_created` date DEFAULT NULL,
@@ -31,11 +30,13 @@ CREATE TABLE `profile` (
   `email` varchar(255) DEFAULT NULL,
   `phoneNumber` varchar(255) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
+  `answer` varchar(255) DEFAULT NULL,
+  `question` varchar(255) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`profilename`),
   UNIQUE KEY `profilename` (`profilename`),
   UNIQUE KEY `password` (`password`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +45,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-INSERT INTO `profile` VALUES (1,'Ha','Nguyen','2020-05-25','ThuHa219',NULL,NULL,NULL,'123456');
+INSERT INTO `profile` VALUES ('Ha','Nguyen','2020-05-28','ThuHa219',NULL,NULL,NULL,'harry potter','what is favorite book ?','123456');
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-25 21:42:31
+-- Dump completed on 2020-05-29  9:39:45

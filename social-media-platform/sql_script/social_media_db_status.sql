@@ -24,12 +24,13 @@ DROP TABLE IF EXISTS `status`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `message` text NOT NULL,
-  `profile_id` int(11) DEFAULT NULL,
+  `status` text NOT NULL,
+  `profilename` varchar(30) DEFAULT NULL,
+  `time_created` date DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `message_profile_fk` (`profile_id`),
-  CONSTRAINT `message_profile_fk` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `status_profile_fk` (`profilename`),
+  CONSTRAINT `status_profile_fk` FOREIGN KEY (`profilename`) REFERENCES `profile` (`profilename`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,6 +39,7 @@ CREATE TABLE `status` (
 
 LOCK TABLES `status` WRITE;
 /*!40000 ALTER TABLE `status` DISABLE KEYS */;
+INSERT INTO `status` VALUES (1,'test test','ThuHa219','2020-05-28');
 /*!40000 ALTER TABLE `status` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-25 21:42:31
+-- Dump completed on 2020-05-29  9:39:45
