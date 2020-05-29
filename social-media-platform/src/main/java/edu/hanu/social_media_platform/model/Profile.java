@@ -161,8 +161,6 @@ public class Profile {
 		return password;
 	}
 	
-	@XmlTransient
-	@JsonbTransient
 	public void setPassword(String password) {
 		this.password = password;
 	}
