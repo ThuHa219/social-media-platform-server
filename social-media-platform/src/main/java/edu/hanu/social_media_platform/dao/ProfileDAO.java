@@ -8,59 +8,22 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+
 import edu.hanu.social_media_platform.model.Profile;
 import edu.hanu.social_media_platform.utils.DbUtils;
 
 public class ProfileDAO implements DAO<Profile>{
-	private static final String INSERT_SQL_QUERY = "INSERT INTO profile(firstname, lastname, time_created, profilename, email, phoneNumber, address, password) VALUES(?, ?, now(), ?, ?, ?, ?, ?)";
+	private static final String INSERT_SQL_QUERY = "INSERT INTO profile(firstname, lastname, time_created, profilename, email, phoneNumber, address, password, answer, question) VALUES(?, ?, now(), ?, ?, ?, ?, ?, ?, ?)";
 	private static final String UPDATE_SQL_QUERY = "UPDATE profile SET firstname = ?," + "	lastname = ?,"
-			+ "	profilename = ?," + " email = ?," + " phoneNumber = ?," + " address = ?," + " password = ? WHERE profile.id = ?";
-	private static final String SELECT_SQL_QUERY = "SELECT * FROM profile WHERE profile.id = ?";
-	private static final String SELECT_SQL_BY_NAME_QUERY = "SELECT * FROM profile WHERE profile.profilename = ?";
+			+ "	profilename = ?," + " email = ?," + " phoneNumber = ?," + " address = ?," + "answer = ?, " + "question = ?, " + " password = ? WHERE profile.profilename = ?";
+	private static final String SELECT_SQL_QUERY = "SELECT * FROM profile WHERE profile.profilename = ?";
 	private static final String SELECT_ALL_SQL_QUERY = "SELECT * FROM profile";
-	private static final String DELETE_SQL_QUERY = "DELETE FROM profile WHERE profile.id = ?";
-	private static final String DELETE_SQL_BY_NAME_QUERY = "DELETE FROM profile WHERE profile.profilename = ?";
+	private static final String DELETE_SQL_QUERY = "DELETE FROM profile WHERE profile.profilename = ?";
 	private static final String DELETE_ALL_SQL_QUERY = "DELETE FROM profile";
-
-	@Override
-	public Profile get(long id) {
-		Connection conn = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		Profile profile = new Profile();
-		try {
-			conn = DbUtils.initialise();
-			if (conn == null) {
-				throw new NullPointerException("ProfileDAO.get: connection is null");
-			}
-			ps = conn.prepareStatement(SELECT_SQL_QUERY);
-			ps.setLong(1, id);
-			rs = ps.executeQuery();
-			System.out.println(ps.toString());
-			while (rs.next()) {
-				profile.setId(rs.getLong("id"));
-				profile.setFirstName(rs.getString("firstname"));
-				profile.setLastName(rs.getString("lastname"));
-				profile.setCreated(rs.getDate("time_created"));
-				profile.setProfileName(rs.getString("profilename"));
-				profile.setEmail(rs.getString("email"));
-				profile.setPhoneNumber(rs.getString("phoneNumber"));
-				profile.setAddress(rs.getString("address"));
-				profile.setPassword(rs.getString("password"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				DbUtils.closeResultSet(rs);
-				DbUtils.closePreparedStatement(ps);
-				DbUtils.closeConnection(conn);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return profile;
-	}
 
 	@Override
 	public List<Profile> getAll() {
@@ -78,15 +41,16 @@ public class ProfileDAO implements DAO<Profile>{
 			System.out.println(ps.toString());
 			while (rs.next()) {
 				Profile profile = new Profile();
-				profile.setId(rs.getLong("id"));
 				profile.setFirstName(rs.getString("firstname"));
 				profile.setLastName(rs.getString("lastname"));
-				profile.setCreated(rs.getDate("time_created"));
+				profile.setCreated(rs.getString("time_created"));
 				profile.setProfileName(rs.getString("profilename"));
 				profile.setEmail(rs.getString("email"));
 				profile.setPhoneNumber(rs.getString("phoneNumber"));
 				profile.setAddress(rs.getString("address"));
 				profile.setPassword(rs.getString("password"));
+				profile.setAnswer(rs.getString("answer"));
+				profile.setQuestion(rs.getString("question"));
 				profiles.add(profile);
 			}
 		} catch (SQLException e) {
@@ -108,14 +72,13 @@ public class ProfileDAO implements DAO<Profile>{
 	public long save(Profile p) {
 		Connection conn = null;
 		PreparedStatement ps = null;
-		long id = 0;
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
 				throw new NullPointerException("ProfileDAO.save: connection is null");
 			}
 			conn.setAutoCommit(false);
-			ps = conn.prepareStatement(INSERT_SQL_QUERY, Statement.RETURN_GENERATED_KEYS);
+			ps = conn.prepareStatement(INSERT_SQL_QUERY);
 			ps.setString(1, p.getFirstName());
 			ps.setString(2, p.getLastName());
 			ps.setString(3, p.getProfileName());
@@ -123,14 +86,11 @@ public class ProfileDAO implements DAO<Profile>{
 			ps.setString(5, p.getPhoneNumber());
 			ps.setString(6, p.getAddress());
 			ps.setString(7, p.getPassword());
-
+			ps.setString(8, p.getAnswer());
+			ps.setString(9, p.getQuestion());
+			
 			ps.execute();
 			System.out.println(ps.toString());
-			ResultSet rs = ps.getGeneratedKeys();
-			if (rs.next()) {
-				id = rs.getLong(1);
-				p.setId(id);
-			}
 			conn.commit();
 		} catch (SQLException e) {
 			try {
@@ -142,6 +102,7 @@ public class ProfileDAO implements DAO<Profile>{
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
+			return 0;
 		} finally {
 			try {
 				DbUtils.closePreparedStatement(ps);
@@ -150,7 +111,7 @@ public class ProfileDAO implements DAO<Profile>{
 				e.printStackTrace();
 			}
 		}
-		return id;
+		return 1;
 	}
 
 	@Override
@@ -172,7 +133,9 @@ public class ProfileDAO implements DAO<Profile>{
 			ps.setString(5, p.getPhoneNumber());
 			ps.setString(6, p.getAddress());
 			ps.setString(7, p.getPassword());
-			ps.setLong(8, p.getId());
+			ps.setString(8, p.getAnswer());
+			ps.setString(9, p.getQuestion());
+			ps.setString(10, p.getProfileName());
 			ps.execute();
 			System.out.println(ps.toString());
 			conn.commit();
@@ -185,31 +148,6 @@ public class ProfileDAO implements DAO<Profile>{
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-		} finally {
-			try {
-				DbUtils.closePreparedStatement(ps);
-				DbUtils.closeConnection(conn);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@Override
-	public void delete(long id) {
-		Connection conn = null;
-		PreparedStatement ps = null;
-		try {
-			conn = DbUtils.initialise();
-			if (conn == null) {
-				throw new NullPointerException("ProfileDAO.delete: connection is null");
-			}
-			ps = conn.prepareStatement(DELETE_SQL_QUERY);
-			ps.setLong(1, id);
-			ps.execute();
-			System.out.println(ps.toString());
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} finally {
 			try {
 				DbUtils.closePreparedStatement(ps);
@@ -254,20 +192,21 @@ public class ProfileDAO implements DAO<Profile>{
 			if (conn == null) {
 				throw new NullPointerException("ProfileDAO.get: connection is null");
 			}
-			ps = conn.prepareStatement(SELECT_SQL_BY_NAME_QUERY);
+			ps = conn.prepareStatement(SELECT_SQL_QUERY);
 			ps.setString(1, profilename);
 			rs = ps.executeQuery();
 			System.out.println(ps.toString());
 			while (rs.next()) {
-				profile.setId(rs.getLong("id"));
 				profile.setFirstName(rs.getString("firstname"));
 				profile.setLastName(rs.getString("lastname"));
-				profile.setCreated(rs.getDate("time_created"));
+				profile.setCreated(rs.getString("time_created"));
 				profile.setProfileName(rs.getString("profilename"));
 				profile.setEmail(rs.getString("email"));
 				profile.setPhoneNumber(rs.getString("phoneNumber"));
 				profile.setAddress(rs.getString("address"));
 				profile.setPassword(rs.getString("password"));
+				profile.setAnswer(rs.getString("answer"));
+				profile.setQuestion(rs.getString("question"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -291,7 +230,7 @@ public class ProfileDAO implements DAO<Profile>{
 			if (conn == null) {
 				throw new NullPointerException("ProfileDAO.delete: connection is null");
 			}
-			ps = conn.prepareStatement(DELETE_SQL_BY_NAME_QUERY);
+			ps = conn.prepareStatement(DELETE_SQL_QUERY);
 			ps.setString(1, profilename);
 			ps.execute();
 			System.out.println(ps.toString());
@@ -312,10 +251,34 @@ public class ProfileDAO implements DAO<Profile>{
 //		p.setLastName("Nguyen");
 //		p.setProfileName("ThuHa219");
 //		p.setPassword("123456");
-//		
+//		p.setQuestion("what is favorite book ?");
+//		p.setAnswer("harry potter");
 		ProfileDAO dao = new ProfileDAO();
 //		dao.save(p);
-		
+//		
 		System.out.println(dao.get("ThuHa219").toString());
+		
+		Client client = ClientBuilder.newClient();
+		final WebTarget baseTarget = client.target("http://localhost:8080/social-media-platform-server/webapi");
+		WebTarget resourceTarget = baseTarget.path("/{resourceName}");
+		WebTarget resourceTargetId = resourceTarget.path("/{resourceId}");
+		
+		System.out.println("hello");
+		Profile profile = resourceTargetId.resolveTemplate("resourceName", "profiles")
+				.resolveTemplate("resourceId", "ThuHa219").request(MediaType.APPLICATION_JSON).get(Profile.class);
+		System.out.println(profile);
+		System.out.println("hello");
+		System.out.println(profile.toString());
+	}
+
+	@Override
+	public Profile get(long id) {
+		// do nothing
+		return null;
+	}
+
+	@Override
+	public void delete(long id) {
+		//do nothing
 	}
 }

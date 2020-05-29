@@ -9,19 +9,47 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Like {
 	private long id;
-	private String author;
+	private Profile profile;
+	private Status status;
 	private Date created;
 	private List<Link> links = new ArrayList<>();
 	
 	public Like(int id, String author, Date created) {
 		super();
 		this.id = id;
-		this.author = author;
 		this.created = new Date();
 	}
 
 	public Like() {
 		super();
+	}
+	
+	/**
+	 * @return the profile
+	 */
+	public Profile getProfile() {
+		return profile;
+	}
+
+	/**
+	 * @param profile the profile to set
+	 */
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public Status getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	/**
@@ -36,20 +64,6 @@ public class Like {
 	 */
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	/**
-	 * @return the author
-	 */
-	public String getAuthor() {
-		return author;
-	}
-
-	/**
-	 * @param author the author to set
-	 */
-	public void setAuthor(String author) {
-		this.author = author;
 	}
 
 	/**
@@ -85,5 +99,11 @@ public class Like {
 		link.setUri(uri);
 		link.setRel(rel);
 		links.add(link);
+	}
+
+	@Override
+	public String toString() {
+		return "Like [id=" + id + ", profile=" + profile + ", status=" + status + ", created=" + created + ", links="
+				+ links + "]";
 	}
 }

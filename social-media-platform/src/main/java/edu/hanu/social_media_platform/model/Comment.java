@@ -10,21 +10,49 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Comment {
 	
 	private long id;
-	private String message;
+	private String comment;
 	private Date created;
-	private String author;
+	private Status status;
+	private Profile profile;
 	private List<Link> links = new ArrayList<>();
 	
 	public Comment(long id, String message, String author) {
 		super();
 		this.id = id;
-		this.message = message;
+		this.comment = message;
 		this.created = new Date();
-		this.author = author;
-	}
+		}
 
 	public Comment() {
 		super();
+	}
+	
+	/**
+	 * @return the status
+	 */
+	public Status getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return the profile
+	 */
+	public Profile getProfile() {
+		return profile;
+	}
+
+	/**
+	 * @param profile the profile to set
+	 */
+	public void setProfile(Profile profile) {
+		this.profile = profile;
 	}
 
 	/**
@@ -44,15 +72,15 @@ public class Comment {
 	/**
 	 * @return the message
 	 */
-	public String getMessage() {
-		return message;
+	public String getComment() {
+		return comment;
 	}
 
 	/**
 	 * @param message the message to set
 	 */
-	public void setMessage(String message) {
-		this.message = message;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	/**
@@ -69,19 +97,6 @@ public class Comment {
 		this.created = created;
 	}
 
-	/**
-	 * @return the author
-	 */
-	public String getAuthor() {
-		return author;
-	}
-
-	/**
-	 * @param author the author to set
-	 */
-	public void setAuthor(String author) {
-		this.author = author;
-	}
 	
 	/**
 	 * @return the links
@@ -95,6 +110,12 @@ public class Comment {
 	 */
 	public void setLinks(List<Link> links) {
 		this.links = links;
+	}
+
+	@Override
+	public String toString() {
+		return "Comment [id=" + id + ", message=" + comment + ", created=" + created + ", status=" + status
+				+ ", profile=" + profile + ", links=" + links + "]";
 	}
 
 	public void addLink(String uri, String rel) {

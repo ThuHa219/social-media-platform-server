@@ -1,49 +1,35 @@
 package edu.hanu.social_media_platform.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement
 public class Profile {
-	private long id;
 	private String firstName;
 	private String lastName;
-	private Date created;
+	private String created;
 	private String profileName;
 	private List<Link> links = new ArrayList<>();
 	private String email;
 	private String address;
 	private String phoneNumber;
 	private String password;
+	private String answer;
+	private String question;
 	
 	public Profile(long id, String firstName, String lastName, String profileName) {
 		super();
-		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.profileName = profileName;
-		this.created = new Date();
 	}
 
 	public Profile() {
 		super();
-	}
-
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	/**
@@ -77,14 +63,14 @@ public class Profile {
 	/**
 	 * @return the created
 	 */
-	public Date getCreated() {
+	public String getCreated() {
 		return created;
 	}
 
 	/**
 	 * @param created the created to set
 	 */
-	public void setCreated(Date created) {
+	public void setCreated(String created) {
 		this.created = created;
 	}
 
@@ -160,7 +146,7 @@ public class Profile {
 
 	@Override
 	public String toString() {
-		return "Profile [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", created=" + created
+		return "Profile [firstName=" + firstName + ", lastName=" + lastName + ", created=" + created
 				+ ", profileName=" + profileName + "]";
 	}
 	
@@ -174,8 +160,38 @@ public class Profile {
 	public String getPassword() {
 		return password;
 	}
-
+	
+	@XmlTransient
+	@JsonbTransient
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	/**
+	 * @return the answer
+	 */
+	public String getAnswer() {
+		return answer;
+	}
+
+	/**
+	 * @param answer the answer to set
+	 */
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+
+	/**
+	 * @return the question
+	 */
+	public String getQuestion() {
+		return question;
+	}
+
+	/**
+	 * @param question the question to set
+	 */
+	public void setQuestion(String question) {
+		this.question = question;
 	}
 }

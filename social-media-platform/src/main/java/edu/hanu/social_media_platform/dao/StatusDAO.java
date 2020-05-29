@@ -8,41 +8,38 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.hanu.social_media_platform.model.Comment;
+import edu.hanu.social_media_platform.model.Status;
 import edu.hanu.social_media_platform.utils.DbUtils;
 
-public class CommentDAO implements DAO<Comment>{
-	private static final String INSERT_SQL_QUERY = "INSERT INTO comment(comment, time_created, profilename, status_id) VALUES(?, now(), ?, ?)";
-	private static final String UPDATE_SQL_QUERY = "UPDATE comment SET comment = ?," + "	profilename = ?,"
-			+ "	status_id = ? WHERE comment.id = ?";
-	private static final String SELECT_SQL_QUERY = "SELECT * FROM comment WHERE comment.id = ?";
-	private static final String SELECT_ALL_SQL_QUERY = "SELECT * FROM comment";
-	private static final String DELETE_SQL_QUERY = "DELETE FROM comment WHERE comment.id = ?";
-	private static final String DELETE_ALL_SQL_QUERY = "DELETE FROM comment";
-	private StatusDAO statusDAO = new StatusDAO();
-	private ProfileDAO profileDAO = new ProfileDAO();
-
+public class StatusDAO implements DAO<Status>{
+	private static final String INSERT_SQL_QUERY = "INSERT INTO status(status, profilename, time_created) VALUES(?, ?, now())";
+	private static final String UPDATE_SQL_QUERY = "UPDATE status SET status = ?," + " profilename = ? WHERE status.id = ?";
+	private static final String SELECT_SQL_QUERY = "SELECT * FROM status WHERE status.id = ?";
+	private static final String SELECT_ALL_SQL_QUERY = "SELECT * FROM status";
+	private static final String DELETE_SQL_QUERY = "DELETE FROM status WHERE status.id = ?";
+	private static final String DELETE_ALL_SQL_QUERY = "DELETE FROM status";
+	ProfileDAO dao = new ProfileDAO();
+	
 	@Override
-	public Comment get(long id) {
+	public Status get(long id) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		Comment comment = new Comment();
+		Status status = new Status();
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("CommentDAO.get: connection is null");
+				throw new NullPointerException("StatusDAO.get: connection is null");
 			}
 			ps = conn.prepareStatement(SELECT_SQL_QUERY);
 			ps.setLong(1, id);
 			rs = ps.executeQuery();
 			System.out.println(ps.toString());
 			while (rs.next()) {
-				comment.setId(rs.getLong("id"));
-				comment.setCreated(rs.getDate("time_created"));
-				comment.setComment(rs.getString("comment"));
-				comment.setStatus(statusDAO.get(rs.getLong("status_id")));
-				comment.setProfile(profileDAO.get(rs.getString("profilename")));
+				status.setId(rs.getLong("id"));
+				status.setStatus(rs.getString("status"));
+				status.setProfile(dao.get(rs.getString("profilename")));
+				status.setCreated(rs.getDate("time_created"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -55,31 +52,30 @@ public class CommentDAO implements DAO<Comment>{
 				e.printStackTrace();
 			}
 		}
-		return comment;
+		return status;
 	}
 
 	@Override
-	public List<Comment> getAll() {
+	public List<Status> getAll() {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		List<Comment> comments = new ArrayList<>();
+		List<Status> statuses= new ArrayList<>();
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("CommentDAO.getAll: connection is null");
+				throw new NullPointerException("StatusDAO.getAll: connection is null");
 			}
 			ps = conn.prepareStatement(SELECT_ALL_SQL_QUERY);
 			rs = ps.executeQuery();
 			System.out.println(ps.toString());
 			while (rs.next()) {
-				Comment comment = new Comment();
-				comment.setId(rs.getLong("id"));
-				comment.setCreated(rs.getDate("time_created"));
-				comment.setComment(rs.getString("comment"));
-				comment.setStatus(statusDAO.get(rs.getLong("status_id")));
-				comment.setProfile(profileDAO.get(rs.getLong("profilename")));
-				comments.add(comment);
+				Status status = new Status();
+				status.setId(rs.getLong("id"));
+				status.setStatus(rs.getString("status"));
+				status.setProfile(dao.get(rs.getString("profilename")));
+				status.setCreated(rs.getDate("time_created"));
+				statuses.add(status);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -93,32 +89,25 @@ public class CommentDAO implements DAO<Comment>{
 				e.printStackTrace();
 			}
 		}
-		return comments;
+		return statuses;
 	}
 
 	@Override
-	public long save(Comment c) {
+	public long save(Status s) {
 		Connection conn = null;
 		PreparedStatement ps = null;
-		long id = 0;
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("CommentDAO.save: connection is null");
+				throw new NullPointerException("StatusDAO.save: connection is null");
 			}
 			conn.setAutoCommit(false);
-			ps = conn.prepareStatement(INSERT_SQL_QUERY, Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, c.getComment());
-			ps.setString(2, c.getProfile().getProfileName());
-			ps.setLong(3, c.getStatus().getId());
-			
+			ps = conn.prepareStatement(INSERT_SQL_QUERY);
+			ps.setString(1, s.getStatus());
+			ps.setString(2, s.getProfile().getProfileName());
+
 			ps.execute();
 			System.out.println(ps.toString());
-			ResultSet rs = ps.getGeneratedKeys();
-			if (rs.next()) {
-				id = rs.getLong(1);
-				c.setId(id);
-			}
 			conn.commit();
 		} catch (SQLException e) {
 			try {
@@ -130,6 +119,7 @@ public class CommentDAO implements DAO<Comment>{
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
+			return 0;
 		} finally {
 			try {
 				DbUtils.closePreparedStatement(ps);
@@ -138,25 +128,24 @@ public class CommentDAO implements DAO<Comment>{
 				e.printStackTrace();
 			}
 		}
-		return id;
+		return 1;
 	}
 
 	@Override
-	public void update(Comment c) {
+	public void update(Status s) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("CommentDAO.update: connection is null");
+				throw new NullPointerException("StatusDAO.update: connection is null");
 			}
 			conn.setAutoCommit(false);
 			ps = conn.prepareStatement(UPDATE_SQL_QUERY);
-			ps.setString(1, c.getComment());
-			ps.setString(2, c.getProfile().getProfileName());
-			ps.setLong(3, c.getStatus().getId());
-			ps.setLong(4, c.getId());
+			ps.setString(1, s.getStatus());
+			ps.setString(2, s.getProfile().getProfileName());
+			ps.setLong(3, s.getId());
 			ps.execute();
 			System.out.println(ps.toString());
 			conn.commit();
@@ -186,7 +175,7 @@ public class CommentDAO implements DAO<Comment>{
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("CommentDAO.delete: connection is null");
+				throw new NullPointerException("StatusDAO.delete: connection is null");
 			}
 			ps = conn.prepareStatement(DELETE_SQL_QUERY);
 			ps.setLong(1, id);
@@ -211,7 +200,7 @@ public class CommentDAO implements DAO<Comment>{
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("CommentDAO.deleteAll: connection is null");
+				throw new NullPointerException("StatusDAO.deleteAll: connection is null");
 			}
 			ps = conn.prepareStatement(DELETE_ALL_SQL_QUERY);
 			ps.execute();
@@ -228,17 +217,13 @@ public class CommentDAO implements DAO<Comment>{
 		}
 	}
 	public static void main(String[] args) {
-		StatusDAO statusDAO = new StatusDAO();
-		ProfileDAO profileDAO = new ProfileDAO();
-		CommentDAO commentDAO = new CommentDAO();
-		
-//		Comment comment = new Comment();
-//		comment.setComment("ha ha");
-//		comment.setStatus(statusDAO.get(1));
-//		comment.setProfile(profileDAO.get("ThuHa219"));
-//		System.out.println(profileDAO.get("ThuHa219"));
-//		commentDAO.save(comment);
-//		
-		System.out.println(commentDAO.get(1).toString());
+		Status status = new Status();
+		status.setStatus("test test");
+		ProfileDAO profileDao = new ProfileDAO();
+		status.setProfile(profileDao.get("ThuHa219"));
+		System.out.println(profileDao.get("ThuHa219"));
+		StatusDAO dao = new StatusDAO();
+		dao.save(status);
+		System.out.println(dao.get(1).toString());
 	}
 }

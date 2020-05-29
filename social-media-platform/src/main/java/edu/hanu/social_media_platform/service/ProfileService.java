@@ -1,7 +1,9 @@
 package edu.hanu.social_media_platform.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.sql.Date;
 import java.util.List;
 
 import edu.hanu.social_media_platform.dao.ProfileDAO;
@@ -15,11 +17,11 @@ public class ProfileService {
 		// do nothing
 	}
 
-	public List<Profile> getAllProfiles() {
+	public List<Profile> getAll() {
 		return dao.getAll();
 	}
 
-	public Profile getProfile(String profilename) throws DataNotFoundException {
+	public Profile get(String profilename) throws DataNotFoundException {
 		Profile profile = dao.get(profilename);
 		if (profile == null) {
 			throw new DataNotFoundException("Can not found profile with profile name: " + profilename);
@@ -31,7 +33,8 @@ public class ProfileService {
 		List<Profile> profilesYear = new ArrayList<>();
 		Calendar cal = Calendar.getInstance();
 		for (Profile p : dao.getAll()) {
-			cal.setTime(p.getCreated());
+			Date created = Date.valueOf(p.getCreated());
+			cal.setTime(created);
 			if (cal.get(Calendar.YEAR) == year) {
 				profilesYear.add(p);
 			}
@@ -47,12 +50,12 @@ public class ProfileService {
 		return list.subList(start, start + size);
 	}
 
-	public Profile addProfile(Profile profile) {
+	public Profile add(Profile profile) {
 		dao.save(profile);
 		return profile;
 	}
 
-	public Profile updateProfile(Profile profile) {
+	public Profile update(Profile profile) {
 		if (profile.getProfileName().isEmpty()) {
 			return null;
 		}
@@ -60,7 +63,7 @@ public class ProfileService {
 		return profile;
 	}
 
-	public void removeProfile(String profileName) throws DataNotFoundException {
+	public void remove(String profileName) throws DataNotFoundException {
 		Profile profile = dao.get(profileName);
 		if (profile == null) {
 			throw new DataNotFoundException("Can not found profile with profile name: " + profileName);

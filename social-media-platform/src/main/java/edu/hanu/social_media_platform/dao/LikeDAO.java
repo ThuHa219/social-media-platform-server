@@ -8,41 +8,40 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.hanu.social_media_platform.model.Comment;
+import edu.hanu.social_media_platform.model.Like;
+import edu.hanu.social_media_platform.model.Status;
 import edu.hanu.social_media_platform.utils.DbUtils;
 
-public class CommentDAO implements DAO<Comment>{
-	private static final String INSERT_SQL_QUERY = "INSERT INTO comment(comment, time_created, profilename, status_id) VALUES(?, now(), ?, ?)";
-	private static final String UPDATE_SQL_QUERY = "UPDATE comment SET comment = ?," + "	profilename = ?,"
-			+ "	status_id = ? WHERE comment.id = ?";
-	private static final String SELECT_SQL_QUERY = "SELECT * FROM comment WHERE comment.id = ?";
-	private static final String SELECT_ALL_SQL_QUERY = "SELECT * FROM comment";
-	private static final String DELETE_SQL_QUERY = "DELETE FROM comment WHERE comment.id = ?";
-	private static final String DELETE_ALL_SQL_QUERY = "DELETE FROM comment";
-	private StatusDAO statusDAO = new StatusDAO();
+public class LikeDAO implements DAO<Like>{
+	private static final String INSERT_SQL_QUERY = "INSERT INTO likes(time_created, profilename, status_id) VALUES(now(), ?, ?)";
+	private static final String UPDATE_SQL_QUERY = "UPDATE likes SET profilename = ?," + " status_id = ? WHERE likes.id = ?";
+	private static final String SELECT_SQL_QUERY = "SELECT * FROM likes WHERE likes.id = ?";
+	private static final String SELECT_ALL_SQL_QUERY = "SELECT * FROM likes";
+	private static final String DELETE_SQL_QUERY = "DELETE FROM likes WHERE likes.id = ?";
+	private static final String DELETE_ALL_SQL_QUERY = "DELETE FROM likes";
 	private ProfileDAO profileDAO = new ProfileDAO();
-
+	private StatusDAO statusDAO = new StatusDAO();
+	
 	@Override
-	public Comment get(long id) {
+	public Like get(long id) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		Comment comment = new Comment();
+		Like like = new Like();
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("CommentDAO.get: connection is null");
+				throw new NullPointerException("LikeDAO.get: connection is null");
 			}
 			ps = conn.prepareStatement(SELECT_SQL_QUERY);
 			ps.setLong(1, id);
 			rs = ps.executeQuery();
 			System.out.println(ps.toString());
 			while (rs.next()) {
-				comment.setId(rs.getLong("id"));
-				comment.setCreated(rs.getDate("time_created"));
-				comment.setComment(rs.getString("comment"));
-				comment.setStatus(statusDAO.get(rs.getLong("status_id")));
-				comment.setProfile(profileDAO.get(rs.getString("profilename")));
+				like.setId(rs.getLong("id"));
+				like.setProfile(profileDAO.get(rs.getString("profilename")));
+				like.setStatus(statusDAO.get(rs.getLong("status_id")));
+				like.setCreated(rs.getDate("time_created"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -55,31 +54,30 @@ public class CommentDAO implements DAO<Comment>{
 				e.printStackTrace();
 			}
 		}
-		return comment;
+		return like;
 	}
 
 	@Override
-	public List<Comment> getAll() {
+	public List<Like> getAll() {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		List<Comment> comments = new ArrayList<>();
+		List<Like> likes= new ArrayList<>();
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("CommentDAO.getAll: connection is null");
+				throw new NullPointerException("LikeDAO.getAll: connection is null");
 			}
 			ps = conn.prepareStatement(SELECT_ALL_SQL_QUERY);
 			rs = ps.executeQuery();
 			System.out.println(ps.toString());
 			while (rs.next()) {
-				Comment comment = new Comment();
-				comment.setId(rs.getLong("id"));
-				comment.setCreated(rs.getDate("time_created"));
-				comment.setComment(rs.getString("comment"));
-				comment.setStatus(statusDAO.get(rs.getLong("status_id")));
-				comment.setProfile(profileDAO.get(rs.getLong("profilename")));
-				comments.add(comment);
+				Like like = new Like();
+				like.setId(rs.getLong("id"));
+				like.setProfile(profileDAO.get(rs.getString("profilename")));
+				like.setStatus(statusDAO.get(rs.getLong("status_id")));
+				like.setCreated(rs.getDate("time_created"));
+				likes.add(like);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -93,31 +91,30 @@ public class CommentDAO implements DAO<Comment>{
 				e.printStackTrace();
 			}
 		}
-		return comments;
+		return likes;
 	}
 
 	@Override
-	public long save(Comment c) {
+	public long save(Like l) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		long id = 0;
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("CommentDAO.save: connection is null");
+				throw new NullPointerException("LikeDAO.save: connection is null");
 			}
 			conn.setAutoCommit(false);
 			ps = conn.prepareStatement(INSERT_SQL_QUERY, Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, c.getComment());
-			ps.setString(2, c.getProfile().getProfileName());
-			ps.setLong(3, c.getStatus().getId());
-			
+			ps.setString(1, l.getProfile().getProfileName());
+			ps.setLong(2, l.getStatus().getId());
+
 			ps.execute();
 			System.out.println(ps.toString());
 			ResultSet rs = ps.getGeneratedKeys();
 			if (rs.next()) {
 				id = rs.getLong(1);
-				c.setId(id);
+				l.setId(id);
 			}
 			conn.commit();
 		} catch (SQLException e) {
@@ -142,21 +139,20 @@ public class CommentDAO implements DAO<Comment>{
 	}
 
 	@Override
-	public void update(Comment c) {
+	public void update(Like l) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("CommentDAO.update: connection is null");
+				throw new NullPointerException("LikeDAO.update: connection is null");
 			}
 			conn.setAutoCommit(false);
 			ps = conn.prepareStatement(UPDATE_SQL_QUERY);
-			ps.setString(1, c.getComment());
-			ps.setString(2, c.getProfile().getProfileName());
-			ps.setLong(3, c.getStatus().getId());
-			ps.setLong(4, c.getId());
+			ps.setString(1, l.getProfile().getProfileName());
+			ps.setLong(2, l.getStatus().getId());
+			ps.setLong(3, l.getId());
 			ps.execute();
 			System.out.println(ps.toString());
 			conn.commit();
@@ -186,7 +182,7 @@ public class CommentDAO implements DAO<Comment>{
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("CommentDAO.delete: connection is null");
+				throw new NullPointerException("LikeDAO.delete: connection is null");
 			}
 			ps = conn.prepareStatement(DELETE_SQL_QUERY);
 			ps.setLong(1, id);
@@ -211,7 +207,7 @@ public class CommentDAO implements DAO<Comment>{
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("CommentDAO.deleteAll: connection is null");
+				throw new NullPointerException("StatusDAO.deleteAll: connection is null");
 			}
 			ps = conn.prepareStatement(DELETE_ALL_SQL_QUERY);
 			ps.execute();
@@ -228,17 +224,18 @@ public class CommentDAO implements DAO<Comment>{
 		}
 	}
 	public static void main(String[] args) {
-		StatusDAO statusDAO = new StatusDAO();
 		ProfileDAO profileDAO = new ProfileDAO();
-		CommentDAO commentDAO = new CommentDAO();
+		StatusDAO statusDAO = new StatusDAO();
+		LikeDAO likeDAO = new LikeDAO();
 		
-//		Comment comment = new Comment();
-//		comment.setComment("ha ha");
-//		comment.setStatus(statusDAO.get(1));
-//		comment.setProfile(profileDAO.get("ThuHa219"));
-//		System.out.println(profileDAO.get("ThuHa219"));
-//		commentDAO.save(comment);
-//		
-		System.out.println(commentDAO.get(1).toString());
+		Like like = new Like();
+		like.setProfile(profileDAO.get("ThuHa219"));
+		like.setStatus(statusDAO.get(1));
+		
+//		likeDAO.delete(1);
+		long id = likeDAO.save(like);
+		
+		System.out.println(likeDAO.get(id).toString());
+//		likeDAO.delete(2);
 	}
 }
