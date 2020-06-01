@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +15,11 @@ import javax.ws.rs.core.MediaType;
 import edu.hanu.social_media_platform.model.Profile;
 import edu.hanu.social_media_platform.utils.DbUtils;
 
-public class ProfileDAO implements DAO<Profile>{
+public class ProfileDAO implements DAO<Profile> {
 	private static final String INSERT_SQL_QUERY = "INSERT INTO profile(firstname, lastname, time_created, profilename, email, phoneNumber, address, password, answer, question) VALUES(?, ?, now(), ?, ?, ?, ?, ?, ?, ?)";
 	private static final String UPDATE_SQL_QUERY = "UPDATE profile SET firstname = ?," + "	lastname = ?,"
-			+ "	profilename = ?," + " email = ?," + " phoneNumber = ?," + " address = ?," + "answer = ?, " + "question = ?, " + " password = ? WHERE profile.profilename = ?";
+			+ "	profilename = ?," + " email = ?," + " phoneNumber = ?," + " address = ?," + "answer = ?, "
+			+ "question = ?, " + " password = ? WHERE profile.profilename = ?";
 	private static final String SELECT_SQL_QUERY = "SELECT * FROM profile WHERE profile.profilename = ?";
 	private static final String SELECT_ALL_SQL_QUERY = "SELECT * FROM profile";
 	private static final String DELETE_SQL_QUERY = "DELETE FROM profile WHERE profile.profilename = ?";
@@ -88,7 +88,7 @@ public class ProfileDAO implements DAO<Profile>{
 			ps.setString(7, p.getPassword());
 			ps.setString(8, p.getAnswer());
 			ps.setString(9, p.getQuestion());
-			
+
 			ps.execute();
 			System.out.println(ps.toString());
 			conn.commit();
@@ -132,9 +132,9 @@ public class ProfileDAO implements DAO<Profile>{
 			ps.setString(4, p.getEmail());
 			ps.setString(5, p.getPhoneNumber());
 			ps.setString(6, p.getAddress());
-			ps.setString(7, p.getPassword());
-			ps.setString(8, p.getAnswer());
-			ps.setString(9, p.getQuestion());
+			ps.setString(9, p.getPassword());
+			ps.setString(7, p.getAnswer());
+			ps.setString(8, p.getQuestion());
 			ps.setString(10, p.getProfileName());
 			ps.execute();
 			System.out.println(ps.toString());
@@ -181,7 +181,7 @@ public class ProfileDAO implements DAO<Profile>{
 			}
 		}
 	}
-	
+
 	public Profile get(String profilename) {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -219,9 +219,9 @@ public class ProfileDAO implements DAO<Profile>{
 				e.printStackTrace();
 			}
 		}
-		return profile;	
+		return profile;
 	}
-	
+
 	public void delete(String profilename) {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -245,6 +245,7 @@ public class ProfileDAO implements DAO<Profile>{
 			}
 		}
 	}
+
 	public static void main(String[] args) {
 		Profile p = new Profile();
 		p.setFirstName("Chien");
@@ -257,7 +258,6 @@ public class ProfileDAO implements DAO<Profile>{
 		dao.save(p);
 		
 		System.out.println(dao.get("QuangChien21").toString());
-//		
 //		Client client = ClientBuilder.newClient();
 //		final WebTarget baseTarget = client.target("http://localhost:8080/social-media-platform-server/webapi");
 //		WebTarget resourceTarget = baseTarget.path("/{resourceName}");
@@ -279,6 +279,6 @@ public class ProfileDAO implements DAO<Profile>{
 
 	@Override
 	public void delete(long id) {
-		//do nothing
+		// do nothing
 	}
 }
