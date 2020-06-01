@@ -9,7 +9,7 @@ public class Status {
 	private long id;
 	private String status;
 	private Profile profile;
-	private Date created;
+	private String created;
 	private List<Link> links = new ArrayList<>();
 	
 	public Status(long id, String status, Profile profile) {
@@ -26,14 +26,14 @@ public class Status {
 	/**
 	 * @return the created
 	 */
-	public Date getCreated() {
+	public String getCreated() {
 		return created;
 	}
 
 	/**
 	 * @param created the created to set
 	 */
-	public void setCreated(Date created) {
+	public void setCreated(String created) {
 		this.created = created;
 	}
 

@@ -1,9 +1,8 @@
 package edu.hanu.social_media_platform.service;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.sql.Date;
 import java.util.List;
 
 import edu.hanu.social_media_platform.dao.ProfileDAO;
@@ -69,5 +68,17 @@ public class ProfileService {
 			throw new DataNotFoundException("Can not found profile with profile name: " + profileName);
 		}
 		dao.delete(profileName);
+	}
+	public static void main(String[] args) {
+		Profile p = new Profile();
+		p.setFirstName("Chien");
+		p.setLastName("Pham");
+		p.setProfileName("QuangChien20");
+		p.setPassword("12345678910");
+		p.setQuestion("what is favorite book ?");
+		p.setAnswer("harry potter");
+		
+		ProfileService profileService = new ProfileService();
+		System.out.println(profileService.add(p));
 	}
 }

@@ -1,5 +1,6 @@
 package edu.hanu.social_media_platform.service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -31,7 +32,8 @@ public class CommentService {
 		List<Comment> commentYear = new ArrayList<>();
 		Calendar cal = Calendar.getInstance();
 		for (Comment c : dao.getAll()) {
-			cal.setTime(c.getCreated());
+			Date created = Date.valueOf(c.getCreated());
+			cal.setTime(created);
 			if (cal.get(Calendar.YEAR) == year) {
 				commentYear.add(c);
 			}

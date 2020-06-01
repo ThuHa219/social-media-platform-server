@@ -39,7 +39,7 @@ public class StatusDAO implements DAO<Status>{
 				status.setId(rs.getLong("id"));
 				status.setStatus(rs.getString("status"));
 				status.setProfile(dao.get(rs.getString("profilename")));
-				status.setCreated(rs.getDate("time_created"));
+				status.setCreated(rs.getDate("time_created").toString());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -74,7 +74,7 @@ public class StatusDAO implements DAO<Status>{
 				status.setId(rs.getLong("id"));
 				status.setStatus(rs.getString("status"));
 				status.setProfile(dao.get(rs.getString("profilename")));
-				status.setCreated(rs.getDate("time_created"));
+				status.setCreated(rs.getDate("time_created").toString());
 				statuses.add(status);
 			}
 		} catch (SQLException e) {

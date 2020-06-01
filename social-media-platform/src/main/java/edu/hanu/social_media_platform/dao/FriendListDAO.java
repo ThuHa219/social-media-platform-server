@@ -6,43 +6,44 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import edu.hanu.social_media_platform.model.FriendList;
 import edu.hanu.social_media_platform.model.Like;
-import edu.hanu.social_media_platform.model.Status;
+import edu.hanu.social_media_platform.model.Profile;
 import edu.hanu.social_media_platform.utils.DbUtils;
 
-public class LikeDAO implements DAO<Like>{
-	private static final String INSERT_SQL_QUERY = "INSERT INTO likes(time_created, profilename, status_id) VALUES(now(), ?, ?)";
-	private static final String UPDATE_SQL_QUERY = "UPDATE likes SET profilename = ?," + " status_id = ? WHERE likes.id = ?";
-	private static final String SELECT_SQL_QUERY = "SELECT * FROM likes WHERE likes.id = ?";
-	private static final String SELECT_ALL_SQL_QUERY = "SELECT * FROM likes";
-	private static final String DELETE_SQL_QUERY = "DELETE FROM likes WHERE likes.id = ?";
-	private static final String DELETE_ALL_SQL_QUERY = "DELETE FROM likes";
-	private ProfileDAO profileDAO = new ProfileDAO();
-	private StatusDAO statusDAO = new StatusDAO();
+public class FriendListDAO {
+	private static final String INSERT_SQL_QUERY = "INSERT INTO friendlist(profilename, friendname) VALUES(?, ?)";
+	private static final String UPDATE_SQL_QUERY = "UPDATE friendlist SET friendname = ? WHERE friendlist.profilename = ?";
+	private static final String SELECT_SQL_QUERY = "SELECT * FROM friendlist WHERE friendlist.profilename = ?";
+	private static final String SELECT_ALL_SQL_QUERY = "SELECT * FROM friendlist";
+	private static final String DELETE_SQL_QUERY = "DELETE FROM friendlist WHERE friendlist.profilename = ? AND friendlist.friendname = ?";
+	private static final String DELETE_ALL_SQL_QUERY = "DELETE FROM friendlist";
+	private ProfileDAO dao = new ProfileDAO();
 	
-	@Override
-	public Like get(long id) {
+	public FriendList get(String profilename) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		Like like = new Like();
+		FriendList friendList = new FriendList();
+		List<Profile> friend = new ArrayList<>();
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("LikeDAO.get: connection is null");
+				throw new NullPointerException("FriendListDAO.get: connection is null");
 			}
 			ps = conn.prepareStatement(SELECT_SQL_QUERY);
-			ps.setLong(1, id);
+			friendList.setProfile(dao.get(profilename));
+			ps.setString(1, profilename);
 			rs = ps.executeQuery();
 			System.out.println(ps.toString());
 			while (rs.next()) {
-				like.setId(rs.getLong("id"));
-				like.setProfile(profileDAO.get(rs.getString("profilename")));
-				like.setStatus(statusDAO.get(rs.getLong("status_id")));
-				like.setCreated(rs.getDate("time_created").toString());
+				friend.add(dao.get(rs.getString("friendname")));
 			}
+			friendList.setFriend(friend);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -54,30 +55,26 @@ public class LikeDAO implements DAO<Like>{
 				e.printStackTrace();
 			}
 		}
-		return like;
+		return friendList;
 	}
-
-	@Override
-	public List<Like> getAll() {
+	
+	public List<FriendList> getAll() {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		List<Like> likes= new ArrayList<>();
+		List<FriendList> friendlist = new ArrayList<>();
+		Set<String> friendname = new HashSet<>();
+		
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("LikeDAO.getAll: connection is null");
+				throw new NullPointerException("FriendListDAO.getAll: connection is null");
 			}
 			ps = conn.prepareStatement(SELECT_ALL_SQL_QUERY);
 			rs = ps.executeQuery();
 			System.out.println(ps.toString());
 			while (rs.next()) {
-				Like like = new Like();
-				like.setId(rs.getLong("id"));
-				like.setProfile(profileDAO.get(rs.getString("profilename")));
-				like.setStatus(statusDAO.get(rs.getLong("status_id")));
-				like.setCreated(rs.getDate("time_created").toString());
-				likes.add(like);
+				friendname.add(rs.getString("profilename"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -91,31 +88,28 @@ public class LikeDAO implements DAO<Like>{
 				e.printStackTrace();
 			}
 		}
-		return likes;
+		for(String s : friendname) {
+			FriendList friendList = get(s);
+			friendlist.add(friendList);
+		}
+		return friendlist;
 	}
-
-	@Override
-	public long save(Like l) {
+	
+	public long save(String profilename, String friendname) {
 		Connection conn = null;
 		PreparedStatement ps = null;
-		long id = 0;
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("LikeDAO.save: connection is null");
+				throw new NullPointerException("FriendListDAO.save: connection is null");
 			}
 			conn.setAutoCommit(false);
-			ps = conn.prepareStatement(INSERT_SQL_QUERY, Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, l.getProfile().getProfileName());
-			ps.setLong(2, l.getStatus().getId());
+			ps = conn.prepareStatement(INSERT_SQL_QUERY);
+			ps.setString(1, profilename);
+			ps.setString(2, friendname);
 
 			ps.execute();
 			System.out.println(ps.toString());
-			ResultSet rs = ps.getGeneratedKeys();
-			if (rs.next()) {
-				id = rs.getLong(1);
-				l.setId(id);
-			}
 			conn.commit();
 		} catch (SQLException e) {
 			try {
@@ -127,6 +121,7 @@ public class LikeDAO implements DAO<Like>{
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
+			return 0;
 		} finally {
 			try {
 				DbUtils.closePreparedStatement(ps);
@@ -135,24 +130,27 @@ public class LikeDAO implements DAO<Like>{
 				e.printStackTrace();
 			}
 		}
-		return id;
+		return 1;
+	}
+	
+	public void save(FriendList f) {
+		for(Profile p : f.getFriend()) {
+			save(f.getProfile().getProfileName(), p.getProfileName());
+		}
 	}
 
-	@Override
-	public void update(Like l) {
+	public void update(String profilename, String friendname) {
 		Connection conn = null;
 		PreparedStatement ps = null;
-
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
-				throw new NullPointerException("LikeDAO.update: connection is null");
+				throw new NullPointerException("FriendListDAO.update: connection is null");
 			}
 			conn.setAutoCommit(false);
 			ps = conn.prepareStatement(UPDATE_SQL_QUERY);
-			ps.setString(1, l.getProfile().getProfileName());
-			ps.setLong(2, l.getStatus().getId());
-			ps.setLong(3, l.getId());
+			ps.setString(1, friendname);
+			ps.setString(2, profilename);
 			ps.execute();
 			System.out.println(ps.toString());
 			conn.commit();
@@ -174,9 +172,14 @@ public class LikeDAO implements DAO<Like>{
 			}
 		}
 	}
+	
+	public void update(FriendList f) {
+		for(Profile p : f.getFriend()) {
+			update(f.getProfile().getProfileName(), p.getProfileName());
+		}
+	}
 
-	@Override
-	public void delete(long id) {
+	public void delete(String profilename, String friendname) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		try {
@@ -185,7 +188,8 @@ public class LikeDAO implements DAO<Like>{
 				throw new NullPointerException("LikeDAO.delete: connection is null");
 			}
 			ps = conn.prepareStatement(DELETE_SQL_QUERY);
-			ps.setLong(1, id);
+			ps.setString(1, profilename);
+			ps.setString(2, friendname);
 			ps.execute();
 			System.out.println(ps.toString());
 		} catch (SQLException e) {
@@ -199,8 +203,13 @@ public class LikeDAO implements DAO<Like>{
 			}
 		}
 	}
+	
+	public void delete(FriendList f) {
+		for(Profile p : f.getFriend()) {
+			delete(f.getProfile().getProfileName(), p.getProfileName());
+		}
+	}
 
-	@Override
 	public void deleteAll() {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -224,18 +233,8 @@ public class LikeDAO implements DAO<Like>{
 		}
 	}
 	public static void main(String[] args) {
-		ProfileDAO profileDAO = new ProfileDAO();
-		StatusDAO statusDAO = new StatusDAO();
-		LikeDAO likeDAO = new LikeDAO();
+		FriendListDAO dao = new FriendListDAO();
+//		dao.delete("ThuHa219", "QuangChien19");
 		
-		Like like = new Like();
-		like.setProfile(profileDAO.get("ThuHa219"));
-		like.setStatus(statusDAO.get(1));
-		
-//		likeDAO.delete(1);
-		long id = likeDAO.save(like);
-		
-		System.out.println(likeDAO.get(id).toString());
-//		likeDAO.delete(2);
 	}
 }

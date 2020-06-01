@@ -1,5 +1,6 @@
 package edu.hanu.social_media_platform.service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -31,7 +32,8 @@ public class StatusService {
 		List<Status> statusYear = new ArrayList<>();
 		Calendar cal = Calendar.getInstance();
 		for (Status s : dao.getAll()) {
-			cal.setTime(s.getCreated());
+			Date created = Date.valueOf(s.getCreated());
+			cal.setTime(created);
 			if (cal.get(Calendar.YEAR) == year) {
 				statusYear.add(s);
 			}

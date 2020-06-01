@@ -39,7 +39,7 @@ public class CommentDAO implements DAO<Comment>{
 			System.out.println(ps.toString());
 			while (rs.next()) {
 				comment.setId(rs.getLong("id"));
-				comment.setCreated(rs.getDate("time_created"));
+				comment.setCreated(rs.getDate("time_created").toString());
 				comment.setComment(rs.getString("comment"));
 				comment.setStatus(statusDAO.get(rs.getLong("status_id")));
 				comment.setProfile(profileDAO.get(rs.getString("profilename")));
@@ -75,7 +75,7 @@ public class CommentDAO implements DAO<Comment>{
 			while (rs.next()) {
 				Comment comment = new Comment();
 				comment.setId(rs.getLong("id"));
-				comment.setCreated(rs.getDate("time_created"));
+				comment.setCreated(rs.getDate("time_created").toString());
 				comment.setComment(rs.getString("comment"));
 				comment.setStatus(statusDAO.get(rs.getLong("status_id")));
 				comment.setProfile(profileDAO.get(rs.getLong("profilename")));

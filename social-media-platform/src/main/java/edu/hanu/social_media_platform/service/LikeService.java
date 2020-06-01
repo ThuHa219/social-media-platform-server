@@ -1,5 +1,6 @@
 package edu.hanu.social_media_platform.service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -31,7 +32,8 @@ public class LikeService {
 		List<Like> likeYear = new ArrayList<>();
 		Calendar cal = Calendar.getInstance();
 		for (Like l : dao.getAll()) {
-			cal.setTime(l.getCreated());
+			Date created = Date.valueOf(l.getCreated());
+			cal.setTime(created);
 			if (cal.get(Calendar.YEAR) == year) {
 				likeYear.add(l);
 			}

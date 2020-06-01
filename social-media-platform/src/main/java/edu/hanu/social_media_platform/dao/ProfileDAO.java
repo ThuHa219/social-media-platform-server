@@ -246,31 +246,31 @@ public class ProfileDAO implements DAO<Profile>{
 		}
 	}
 	public static void main(String[] args) {
-//		Profile p = new Profile();
-//		p.setFirstName("Ha");
-//		p.setLastName("Nguyen");
-//		p.setProfileName("ThuHa219");
-//		p.setPassword("123456");
-//		p.setQuestion("what is favorite book ?");
-//		p.setAnswer("harry potter");
+		Profile p = new Profile();
+		p.setFirstName("Chien");
+		p.setLastName("Pham");
+		p.setProfileName("QuangChien21");
+		p.setPassword("12345678913");
+		p.setQuestion("what is favorite book ?");
+		p.setAnswer("harry potter");
 		ProfileDAO dao = new ProfileDAO();
-//		dao.save(p);
+		dao.save(p);
+		
+		System.out.println(dao.get("QuangChien21").toString());
 //		
-		System.out.println(dao.get("ThuHa219").toString());
-		
-		Client client = ClientBuilder.newClient();
-		final WebTarget baseTarget = client.target("http://localhost:8080/social-media-platform-server/webapi");
-		WebTarget resourceTarget = baseTarget.path("/{resourceName}");
-		WebTarget resourceTargetId = resourceTarget.path("/{resourceId}");
-		
-		System.out.println("hello");
-		Profile profile = resourceTargetId.resolveTemplate("resourceName", "profiles")
-				.resolveTemplate("resourceId", "ThuHa219").request(MediaType.APPLICATION_JSON).get(Profile.class);
-		System.out.println(profile);
-		System.out.println("hello");
-		System.out.println(profile.toString());
+//		Client client = ClientBuilder.newClient();
+//		final WebTarget baseTarget = client.target("http://localhost:8080/social-media-platform-server/webapi");
+//		WebTarget resourceTarget = baseTarget.path("/{resourceName}");
+//		WebTarget resourceTargetId = resourceTarget.path("/{resourceId}");
+//		
+//		System.out.println("hello");
+//		Profile profile = resourceTargetId.resolveTemplate("resourceName", "profiles")
+//				.resolveTemplate("resourceId", "ThuHa219").request(MediaType.APPLICATION_JSON).get(Profile.class);
+//		System.out.println(profile);
+//		System.out.println("hello");
+//		System.out.println(profile.toString());
 	}
-
+	
 	@Override
 	public Profile get(long id) {
 		// do nothing

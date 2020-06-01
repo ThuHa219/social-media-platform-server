@@ -11,7 +11,7 @@ public class Comment {
 	
 	private long id;
 	private String comment;
-	private Date created;
+	private String created;
 	private Status status;
 	private Profile profile;
 	private List<Link> links = new ArrayList<>();
@@ -20,7 +20,6 @@ public class Comment {
 		super();
 		this.id = id;
 		this.comment = message;
-		this.created = new Date();
 		}
 
 	public Comment() {
@@ -86,14 +85,14 @@ public class Comment {
 	/**
 	 * @return the created
 	 */
-	public Date getCreated() {
+	public String getCreated() {
 		return created;
 	}
 
 	/**
 	 * @param created the created to set
 	 */
-	public void setCreated(Date created) {
+	public void setCreated(String created) {
 		this.created = created;
 	}
 

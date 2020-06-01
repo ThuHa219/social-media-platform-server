@@ -11,13 +11,12 @@ public class Like {
 	private long id;
 	private Profile profile;
 	private Status status;
-	private Date created;
+	private String created;
 	private List<Link> links = new ArrayList<>();
 	
 	public Like(int id, String author, Date created) {
 		super();
 		this.id = id;
-		this.created = new Date();
 	}
 
 	public Like() {
@@ -69,14 +68,14 @@ public class Like {
 	/**
 	 * @return the created
 	 */
-	public Date getCreated() {
+	public String getCreated() {
 		return created;
 	}
 
 	/**
 	 * @param created the created to set
 	 */
-	public void setCreated(Date created) {
+	public void setCreated(String created) {
 		this.created = created;
 	}
 

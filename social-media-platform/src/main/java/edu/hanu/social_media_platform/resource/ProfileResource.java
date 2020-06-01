@@ -28,7 +28,7 @@ public class ProfileResource {
 	ProfileService profileService = new ProfileService();
 
 	@GET
-	public List<Profile> getAllProfiles(@BeanParam FilterBean filterBean) {
+	public List<Profile> getAll(@BeanParam FilterBean filterBean) {
 		if (filterBean.getYear() > 0) {
 			return profileService.getProfilesForYear(filterBean.getYear());
 		}
@@ -40,7 +40,7 @@ public class ProfileResource {
 
 	@GET
 	@Path("/{profileName}")
-	public Response getProfile(@PathParam("profileName") String profileName, @Context UriInfo uriInfo) {
+	public Response get(@PathParam("profileName") String profileName, @Context UriInfo uriInfo) {
 		 Profile entity = profileService.get(profileName);
 		 entity.addLink(getUriForSelf(uriInfo), "self");
 		 return Response.ok()
@@ -49,8 +49,9 @@ public class ProfileResource {
 	}
 
 	@POST
-	public Response addProfile(Profile profile, @Context UriInfo uriInfo) {
+	public Response add(Profile profile, @Context UriInfo uriInfo) {
 		Profile entity = profileService.add(profile);
+		System.out.println("hello");
 		String profileName = profile.getProfileName();
 		URI uri = uriInfo.getAbsolutePathBuilder().path(profileName).build();
 		return Response.created(uri)
@@ -60,14 +61,14 @@ public class ProfileResource {
 
 	@PUT
 	@Path("/{profileName}")
-	public Profile updateProfile(@PathParam("profileName") String profileName, Profile profile) {
+	public Profile update(@PathParam("profileName") String profileName, Profile profile) {
 		profile.setProfileName(profileName);
 		return profileService.update(profile);
 	}
 
 	@DELETE
 	@Path("/{profileName}")
-	public void deleteProfile(@PathParam("profileName") String profileName) {
+	public void delete(@PathParam("profileName") String profileName) {
 		profileService.remove(profileName);
 	}
 	
