@@ -1,17 +1,17 @@
 package edu.hanu.social_media_platform.service;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.sql.Date;
 import java.util.List;
-
 import edu.hanu.social_media_platform.dao.ProfileDAO;
 import edu.hanu.social_media_platform.exception.DataNotFoundException;
 import edu.hanu.social_media_platform.model.Profile;
+import edu.hanu.social_media_platform.utils.PasswordAuthentication;
 
 public class ProfileService {
 	private ProfileDAO dao = new ProfileDAO();
+	private PasswordAuthentication authentication = new PasswordAuthentication();
 
 	public ProfileService() {
 		// do nothing
@@ -50,15 +50,23 @@ public class ProfileService {
 		return list.subList(start, start + size);
 	}
 
+	@SuppressWarnings("deprecation")
 	public Profile add(Profile profile) {
+		System.out.println(profile.getPassword());
+		String pass = profile.getPassword();
+		profile.setPassword(authentication.hash(pass));
 		dao.save(profile);
 		return profile;
 	}
 
+	@SuppressWarnings("deprecation")
 	public Profile update(Profile profile) {
 		if (profile.getProfileName().isEmpty()) {
 			return null;
 		}
+		System.out.println(profile.getPassword());
+		String pass = profile.getPassword();
+		profile.setPassword(authentication.hash(pass));
 		dao.update(profile);
 		return profile;
 	}

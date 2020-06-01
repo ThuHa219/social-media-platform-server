@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 
 import edu.hanu.social_media_platform.model.Profile;
 import edu.hanu.social_media_platform.utils.DbUtils;
-import edu.hanu.social_media_platform.utils.PasswordAuthentication;
 
 public class ProfileDAO implements DAO<Profile> {
 	private static final String INSERT_SQL_QUERY = "INSERT INTO profile(firstname, lastname, time_created, profilename, email, phoneNumber, address, password, answer, question) VALUES(?, ?, now(), ?, ?, ?, ?, ?, ?, ?)";
@@ -25,7 +24,6 @@ public class ProfileDAO implements DAO<Profile> {
 	private static final String SELECT_ALL_SQL_QUERY = "SELECT * FROM profile";
 	private static final String DELETE_SQL_QUERY = "DELETE FROM profile WHERE profile.profilename = ?";
 	private static final String DELETE_ALL_SQL_QUERY = "DELETE FROM profile";
-	PasswordAuthentication authentication = new PasswordAuthentication();
 
 	@Override
 	public List<Profile> getAll() {
@@ -70,7 +68,6 @@ public class ProfileDAO implements DAO<Profile> {
 		return profiles;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public long save(Profile p) {
 		Connection conn = null;
@@ -88,7 +85,7 @@ public class ProfileDAO implements DAO<Profile> {
 			ps.setString(4, p.getEmail());
 			ps.setString(5, p.getPhoneNumber());
 			ps.setString(6, p.getAddress());
-			ps.setString(7, authentication.hash(p.getPassword()));
+			ps.setString(7, p.getPassword());
 			ps.setString(8, p.getAnswer());
 			ps.setString(9, p.getQuestion());
 
@@ -117,7 +114,6 @@ public class ProfileDAO implements DAO<Profile> {
 		return 1;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void update(Profile p) {
 		Connection conn = null;
@@ -136,7 +132,7 @@ public class ProfileDAO implements DAO<Profile> {
 			ps.setString(4, p.getEmail());
 			ps.setString(5, p.getPhoneNumber());
 			ps.setString(6, p.getAddress());
-			ps.setString(7, authentication.hash(p.getPassword()));
+			ps.setString(7, p.getPassword());
 			ps.setString(8, p.getAnswer());
 			ps.setString(9, p.getQuestion());
 			ps.setString(10, p.getProfileName());
