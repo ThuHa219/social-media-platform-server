@@ -11,7 +11,7 @@ import java.util.List;
 import edu.hanu.social_media_platform.model.Comment;
 import edu.hanu.social_media_platform.utils.DbUtils;
 
-public class CommentDAO implements DAO<Comment>{
+public class CommentDAO implements DAO<Comment> {
 	private static final String INSERT_SQL_QUERY = "INSERT INTO comment(comment, time_created, profilename, status_id) VALUES(?, now(), ?, ?)";
 	private static final String UPDATE_SQL_QUERY = "UPDATE comment SET comment = ?," + "	profilename = ?,"
 			+ "	status_id = ? WHERE comment.id = ?";
@@ -78,7 +78,7 @@ public class CommentDAO implements DAO<Comment>{
 				comment.setCreated(rs.getDate("time_created").toString());
 				comment.setComment(rs.getString("comment"));
 				comment.setStatus(statusDAO.get(rs.getLong("status_id")));
-				comment.setProfile(profileDAO.get(rs.getLong("profilename")));
+				comment.setProfile(profileDAO.get(rs.getString("profilename")));
 				comments.add(comment);
 			}
 		} catch (SQLException e) {
@@ -111,7 +111,7 @@ public class CommentDAO implements DAO<Comment>{
 			ps.setString(1, c.getComment());
 			ps.setString(2, c.getProfile().getProfileName());
 			ps.setLong(3, c.getStatus().getId());
-			
+
 			ps.execute();
 			System.out.println(ps.toString());
 			ResultSet rs = ps.getGeneratedKeys();
@@ -227,11 +227,15 @@ public class CommentDAO implements DAO<Comment>{
 			}
 		}
 	}
+
 	public static void main(String[] args) {
 		StatusDAO statusDAO = new StatusDAO();
 		ProfileDAO profileDAO = new ProfileDAO();
 		CommentDAO commentDAO = new CommentDAO();
-		
+		List<Comment> comments = commentDAO.getAll();
+		for (Comment comment : comments) {
+			System.out.println(comment.toString());
+		}
 //		Comment comment = new Comment();
 //		comment.setComment("ha ha");
 //		comment.setStatus(statusDAO.get(1));
@@ -239,6 +243,6 @@ public class CommentDAO implements DAO<Comment>{
 //		System.out.println(profileDAO.get("ThuHa219"));
 //		commentDAO.save(comment);
 //		
-		System.out.println(commentDAO.get(1).toString());
+		//System.out.println(commentDAO.get(1).toString());
 	}
 }
