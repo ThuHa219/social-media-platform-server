@@ -16,8 +16,10 @@ public class StatusDAO implements DAO<Status>{
 	private static final String SELECT_SQL_QUERY = "SELECT * FROM status WHERE status.id = ?";
 	private static final String SELECT_ALL_SQL_QUERY = "SELECT * FROM status";
 	private static final String DELETE_SQL_QUERY = "DELETE FROM status WHERE status.id = ?";
+	private static final String DELETE_SQL_QUERY_ALL_COMMENT = "DELETE FROM comment WHERE status.id = ?";
 	private static final String DELETE_ALL_SQL_QUERY = "DELETE FROM status";
 	ProfileDAO dao = new ProfileDAO();
+	CommentDAO commentDao = new CommentDAO();
 	
 	@Override
 	public Status get(long id) {
@@ -176,7 +178,8 @@ public class StatusDAO implements DAO<Status>{
 			if (conn == null) {
 				throw new NullPointerException("StatusDAO.delete: connection is null");
 			}
-			ps = conn.prepareStatement(DELETE_SQL_QUERY);
+			ps = conn.prepareStatement(DELETE_SQL_QUERY_ALL_COMMENT);
+			deleteComment(id);
 			ps.setLong(1, id);
 			ps.execute();
 			System.out.println(ps.toString());
@@ -191,6 +194,31 @@ public class StatusDAO implements DAO<Status>{
 			}
 		}
 	}
+	
+	public void deleteComment(long statusId) {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		try {
+			conn = DbUtils.initialise();
+			if (conn == null) {
+				throw new NullPointerException("StatusDAO.delete: connection is null");
+			}
+			ps = conn.prepareStatement(DELETE_SQL_QUERY);
+			ps.setLong(1, statusId);
+			ps.execute();
+			System.out.println(ps.toString());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				DbUtils.closePreparedStatement(ps);
+				DbUtils.closeConnection(conn);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 
 	@Override
 	public void deleteAll() {
