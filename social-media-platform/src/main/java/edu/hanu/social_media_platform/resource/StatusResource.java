@@ -87,6 +87,7 @@ public class StatusResource {
 		@POST
 		public Response add(Status status, @Context UriInfo uriInfo) {
 			Status entity = statusService.add(status);
+			System.out.println("hello");
 			entity.addLink(getUriForSelf(uriInfo), "self");
 			entity.addLink(getUriForProfile(uriInfo, entity), "profile");
 			String newId = String.valueOf(status.getId());

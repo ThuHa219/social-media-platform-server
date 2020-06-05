@@ -65,6 +65,13 @@ public class ProfileResource {
 		profile.setProfileName(profileName);
 		return profileService.update(profile);
 	}
+	
+	@PUT
+	@Path("/edit/{profileName}")
+	public Profile edit(@PathParam("profileName") String profileName, Profile profile) {
+		profile.setProfileName(profileName);
+		return profileService.edit(profile);
+	}
 
 	@DELETE
 	@Path("/{profileName}")

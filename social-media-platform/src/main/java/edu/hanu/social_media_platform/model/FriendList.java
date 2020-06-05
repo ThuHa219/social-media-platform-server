@@ -2,6 +2,9 @@ package edu.hanu.social_media_platform.model;
 
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class FriendList {
 	private Profile profile;
 	private List<Profile> friend;

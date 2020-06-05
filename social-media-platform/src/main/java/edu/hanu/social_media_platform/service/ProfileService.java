@@ -70,6 +70,17 @@ public class ProfileService {
 		dao.update(profile);
 		return profile;
 	}
+	
+	public Profile edit(Profile profile) {
+		if (profile.getProfileName().isEmpty()) {
+			return null;
+		}
+		System.out.println(profile.getPassword());
+		String pass = profile.getPassword();
+		profile.setPassword(authentication.hash(pass));
+		dao.updateNotQA(profile);
+		return profile;
+	}
 
 	public void remove(String profileName) throws DataNotFoundException {
 		Profile profile = dao.get(profileName);

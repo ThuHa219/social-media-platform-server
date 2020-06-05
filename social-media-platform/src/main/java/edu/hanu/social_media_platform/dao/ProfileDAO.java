@@ -20,6 +20,8 @@ public class ProfileDAO implements DAO<Profile> {
 	private static final String UPDATE_SQL_QUERY = "UPDATE profile SET firstname = ?," + "	lastname = ?,"
 			+ "	profilename = ?," + " email = ?," + " phoneNumber = ?," + " address = ?," + "answer = ?, "
 			+ "question = ?, " + " password = ? WHERE profile.profilename = ?";
+	private static final String UPDATE_SQL_QUERY_NOT_QA = "UPDATE profile SET firstname = ?," + "	lastname = ?,"
+			+ "	profilename = ?," + " email = ?," + " phoneNumber = ?," + " address = ?," + " password = ? WHERE profile.profilename = ?";
 	private static final String SELECT_SQL_QUERY = "SELECT * FROM profile WHERE profile.profilename = ?";
 	private static final String SELECT_ALL_SQL_QUERY = "SELECT * FROM profile";
 	private static final String DELETE_SQL_QUERY = "DELETE FROM profile WHERE profile.profilename = ?";
@@ -113,7 +115,7 @@ public class ProfileDAO implements DAO<Profile> {
 		}
 		return 1;
 	}
-
+	
 	@Override
 	public void update(Profile p) {
 		Connection conn = null;
@@ -132,10 +134,51 @@ public class ProfileDAO implements DAO<Profile> {
 			ps.setString(4, p.getEmail());
 			ps.setString(5, p.getPhoneNumber());
 			ps.setString(6, p.getAddress());
-			ps.setString(9, p.getPassword());
 			ps.setString(7, p.getAnswer());
 			ps.setString(8, p.getQuestion());
+			ps.setString(9, p.getPassword());
 			ps.setString(10, p.getProfileName());
+			ps.execute();
+			System.out.println(ps.toString());
+			conn.commit();
+		} catch (SQLException e) {
+			try {
+				if (conn != null) {
+					conn.rollback();
+					e.printStackTrace();
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} finally {
+			try {
+				DbUtils.closePreparedStatement(ps);
+				DbUtils.closeConnection(conn);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void updateNotQA(Profile p) {
+		Connection conn = null;
+		PreparedStatement ps = null;
+
+		try {
+			conn = DbUtils.initialise();
+			if (conn == null) {
+				throw new NullPointerException("ProfileDAO.update: connection is null");
+			}
+			conn.setAutoCommit(false);
+			ps = conn.prepareStatement(UPDATE_SQL_QUERY_NOT_QA);
+			ps.setString(1, p.getFirstName());
+			ps.setString(2, p.getLastName());
+			ps.setString(3, p.getProfileName());
+			ps.setString(4, p.getEmail());
+			ps.setString(5, p.getPhoneNumber());
+			ps.setString(6, p.getAddress());
+			ps.setString(7, p.getPassword());
+			ps.setString(8, p.getProfileName());
 			ps.execute();
 			System.out.println(ps.toString());
 			conn.commit();
@@ -251,13 +294,11 @@ public class ProfileDAO implements DAO<Profile> {
 		p.setFirstName("Chien");
 		p.setLastName("Pham");
 		p.setProfileName("QuangChien21");
-		p.setPassword("12345678913");
-		p.setQuestion("what is favorite book ?");
-		p.setAnswer("harry potter");
+		p.setPassword("1234567891415");
 		ProfileDAO dao = new ProfileDAO();
-		dao.save(p);
+		dao.updateNotQA(p);
 		
-		System.out.println(dao.get("QuangChien21").toString());
+		System.out.println(dao.get("ThuHa").toString());
 //		Client client = ClientBuilder.newClient();
 //		final WebTarget baseTarget = client.target("http://localhost:8080/social-media-platform-server/webapi");
 //		WebTarget resourceTarget = baseTarget.path("/{resourceName}");
