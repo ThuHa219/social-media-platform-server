@@ -109,14 +109,4 @@ public class StatusResource {
 		public void deleteMessage(@PathParam("messageId") long id) {
 			statusService.remove(id);
 		}
-
-//		@Path("/{messageId}/comments")
-//		public CommentResource getCommentResource() {
-//			return new CommentResource();
-//		}
-//		
-//		@Path("/{messageId}/likes")
-//		public LikeResource getLikeResource() {
-//			return new LikeResource();
-//		}
 }

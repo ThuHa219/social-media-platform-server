@@ -134,6 +134,7 @@ public class FriendListDAO {
 	}
 	
 	public void save(FriendList f) {
+		delete(f);
 		for(Profile p : f.getFriend()) {
 			save(f.getProfile().getProfileName(), p.getProfileName());
 		}
