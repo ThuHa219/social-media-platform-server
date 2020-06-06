@@ -17,7 +17,7 @@ public class StatusDAO implements DAO<Status> {
 	private static final String SELECT_SQL_QUERY = "SELECT * FROM status WHERE status.id = ?";
 	private static final String SELECT_ALL_SQL_QUERY = "SELECT * FROM status";
 	private static final String DELETE_SQL_QUERY = "DELETE FROM status WHERE status.id = ?";
-	private static final String DELETE_SQL_QUERY_ALL_COMMENT = "DELETE FROM comment WHERE status.id = ?";
+	private static final String DELETE_SQL_QUERY_ALL_COMMENT = "DELETE FROM comment WHERE status_id = ?";
 	private static final String DELETE_ALL_SQL_QUERY = "DELETE FROM status";
 	ProfileDAO dao = new ProfileDAO();
 //	CommentDAO commentDao = new CommentDAO();
