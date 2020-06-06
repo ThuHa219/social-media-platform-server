@@ -10,17 +10,18 @@ import java.util.List;
 import edu.hanu.social_media_platform.model.Status;
 import edu.hanu.social_media_platform.utils.DbUtils;
 
-public class StatusDAO implements DAO<Status>{
+public class StatusDAO implements DAO<Status> {
 	private static final String INSERT_SQL_QUERY = "INSERT INTO status(status, profilename, time_created) VALUES(?, ?, now())";
-	private static final String UPDATE_SQL_QUERY = "UPDATE status SET status = ?," + " profilename = ? WHERE status.id = ?";
+	private static final String UPDATE_SQL_QUERY = "UPDATE status SET status = ?,"
+			+ " profilename = ? WHERE status.id = ?";
 	private static final String SELECT_SQL_QUERY = "SELECT * FROM status WHERE status.id = ?";
 	private static final String SELECT_ALL_SQL_QUERY = "SELECT * FROM status";
 	private static final String DELETE_SQL_QUERY = "DELETE FROM status WHERE status.id = ?";
 	private static final String DELETE_SQL_QUERY_ALL_COMMENT = "DELETE FROM comment WHERE status.id = ?";
 	private static final String DELETE_ALL_SQL_QUERY = "DELETE FROM status";
 	ProfileDAO dao = new ProfileDAO();
-	CommentDAO commentDao = new CommentDAO();
-	
+//	CommentDAO commentDao = new CommentDAO();
+
 	@Override
 	public Status get(long id) {
 		Connection conn = null;
@@ -61,7 +62,7 @@ public class StatusDAO implements DAO<Status>{
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		List<Status> statuses= new ArrayList<>();
+		List<Status> statuses = new ArrayList<>();
 		try {
 			conn = DbUtils.initialise();
 			if (conn == null) {
@@ -178,7 +179,7 @@ public class StatusDAO implements DAO<Status>{
 			if (conn == null) {
 				throw new NullPointerException("StatusDAO.delete: connection is null");
 			}
-			ps = conn.prepareStatement(DELETE_SQL_QUERY_ALL_COMMENT);
+			ps = conn.prepareStatement(DELETE_SQL_QUERY);
 			deleteComment(id);
 			ps.setLong(1, id);
 			ps.execute();
@@ -194,7 +195,7 @@ public class StatusDAO implements DAO<Status>{
 			}
 		}
 	}
-	
+
 	public void deleteComment(long statusId) {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -203,7 +204,7 @@ public class StatusDAO implements DAO<Status>{
 			if (conn == null) {
 				throw new NullPointerException("StatusDAO.delete: connection is null");
 			}
-			ps = conn.prepareStatement(DELETE_SQL_QUERY);
+			ps = conn.prepareStatement(DELETE_SQL_QUERY_ALL_COMMENT);
 			ps.setLong(1, statusId);
 			ps.execute();
 			System.out.println(ps.toString());
@@ -218,7 +219,6 @@ public class StatusDAO implements DAO<Status>{
 			}
 		}
 	}
-
 
 	@Override
 	public void deleteAll() {
@@ -243,6 +243,7 @@ public class StatusDAO implements DAO<Status>{
 			}
 		}
 	}
+
 	public static void main(String[] args) {
 		Status status = new Status();
 		status.setStatus("test test");
