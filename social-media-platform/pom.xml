@@ -40,6 +40,21 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>javax.websocket</groupId>
+			<artifactId>javax.websocket-client-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.tyrus</groupId>
+			<artifactId>tyrus-client</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.tyrus</groupId>
+			<artifactId>tyrus-container-grizzly</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet-core</artifactId>
 			<!-- use the following artifactId if you don't need servlet 2.x compatibility -->
@@ -87,14 +102,14 @@
 			<artifactId>jaxb-impl</artifactId>
 			<version>2.1.2</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql-driver-version}</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 		<dependency>
 			<groupId>javax.servlet</groupId>

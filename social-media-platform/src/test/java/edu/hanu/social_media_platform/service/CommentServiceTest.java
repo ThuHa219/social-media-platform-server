@@ -29,8 +29,6 @@ class CommentServiceTest {
 		expected.setProfile(profileService.get("ThuHa219"));
 		expected.setStatus(statusService.get(1));
 		
-		assertEquals(expected, commentService.get(1));
+		assertEquals(expected.toString(), commentService.get(1).toString());
 	}
-	
-
 }
