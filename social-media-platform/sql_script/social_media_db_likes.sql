@@ -32,7 +32,7 @@ CREATE TABLE `likes` (
   KEY `likes_status_fk` (`status_id`),
   CONSTRAINT `likes_profile_fk` FOREIGN KEY (`profilename`) REFERENCES `profile` (`profilename`),
   CONSTRAINT `likes_status_fk` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `likes` (
 
 LOCK TABLES `likes` WRITE;
 /*!40000 ALTER TABLE `likes` DISABLE KEYS */;
-INSERT INTO `likes` VALUES (1,'2020-05-28',NULL,1),(2,'2020-05-28',NULL,1),(3,'2020-05-28','ThuHa219',1);
+INSERT INTO `likes` VALUES (1,'2020-06-01','Chien3',1),(2,'2020-06-01','Chien4',1),(3,'2020-06-01','Chien2',1),(4,'2020-06-01','Chien1',1),(5,'2020-06-01','Chien1',2),(6,'2020-06-01','Chien1',4),(7,'2020-06-01','Chien1',3);
 /*!40000 ALTER TABLE `likes` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-29  9:39:45
+-- Dump completed on 2020-06-29  8:40:07

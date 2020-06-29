@@ -38,6 +38,7 @@ CREATE TABLE `friendlist` (
 
 LOCK TABLES `friendlist` WRITE;
 /*!40000 ALTER TABLE `friendlist` DISABLE KEYS */;
+INSERT INTO `friendlist` VALUES ('Chien4','Chien4'),('Chien4','Chien1'),('Chien4','Chien1'),('Thu Ha','Chien4');
 /*!40000 ALTER TABLE `friendlist` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-29  9:39:45
+-- Dump completed on 2020-06-29  8:40:06

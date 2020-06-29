@@ -45,7 +45,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-INSERT INTO `profile` VALUES ('Ha','Nguyen','2020-05-28','ThuHa219',NULL,NULL,NULL,'harry potter','what is favorite book ?','123456');
+INSERT INTO `profile` VALUES ('Chien','Pham','2020-06-01','Chien1','quangchiennnn@gmail.com','0366271270','Ha Noi','$31$16$7vUFsZh_GzP6YDuZgqxm9M2vxJfwfhifRDbsqAGjRNM','Oat','What is your nickname?'),('Chien','Pham','2020-06-01','Chien2','quangchiennnn@gmail.com','0366271270','Ha Noi','Oat','What is your nickname?','$31$16$PaMcENX-3PCewctZXubEJqEfBm2OQwDW0XbXg_PH8bM'),('Chien','Pham','2020-06-01','Chien3','quangchiennnn@gmail.com','0366271270','Ha Noi','Oat','What is your nickname?','$31$16$OCblfzKZe2KEV-BZqUzNIKKH7BjMN3rf5yxbCL_0BXE'),('Chiennnnnn','Trammmm','2020-06-01','Chien4','quangchiennnn@gmail.com','0366271270','Ha Noi','Oat','What is your nickname?','$31$16$EbHT2LCIO2Ce7ldkNtH0wdMX7rRPv2E5gNRrDiVXEMA'),('Chien','Pham','2020-06-01','Chien5','quangchiennnn@gmail.com','0366271270','Ha Noi','Oat','What is your nickname?','$31$16$bgf-lPUwAjgZYauXRsW-_HLc3N2NT-il_atGxHW_e6E'),('Chien','Pham','2020-05-29','Quangchien1','quangchiennnn@gmail.com','0366271270','Ha Noi',NULL,NULL,'Quangchien17@'),('Chienn','Phamm','2020-06-05','Quangchien19',NULL,NULL,NULL,NULL,NULL,'$31$16$OM4mPLoxldcTJ9mPuIQMSa7KQk1jIJLipisypxfDTE8'),('Chien','Pham','2020-05-29','Quangchien2','quangchiennnn@gmail.com','0366271270','Ha Noi',NULL,NULL,'$31$16$TC1nBYO3Rpx__pfsphbl4nxG4FJ25tdB6a7hIcgjcR4'),('Chien','Pham','2020-05-29','Quangchien3','quangchiennnn@gmail.com','0366271270','Ha Noi','$31$16$eEHHo2xQ6d5V5AzS50V0Xjzf13JqVBPF5xkfGJq9F4Y','Every time very time','What is your\r\n												favourite book?'),('Nguyen','Ha','2020-06-06','Thu Ha','ngthuha219@gmail.com','0984060146','Ha Noi, Viet Nam','Harry Potter','What is your\r\n												favourite book?','$31$16$RpZm6kfzBgxm_8zZEie4ojfxRWYxzt3vt3JGI-UNCHc'),('Ha','Nguyen','2020-06-26','ThuHa','ngthuha219@gmail.com','0984060146','HN','HP','What is your favorite book?','$31$16$EkX29pcOuKVTeOoiE3PMLgjSsuETkRjbKkfhueJvKOc'),('Ha','Nguyen','2020-05-29','ThuHa219',NULL,NULL,NULL,'harry potter','what is favorite book ?','123456');
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -58,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-29  9:39:45
+-- Dump completed on 2020-06-29  8:40:06

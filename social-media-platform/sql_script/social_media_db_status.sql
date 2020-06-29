@@ -30,7 +30,7 @@ CREATE TABLE `status` (
   PRIMARY KEY (`id`),
   KEY `status_profile_fk` (`profilename`),
   CONSTRAINT `status_profile_fk` FOREIGN KEY (`profilename`) REFERENCES `profile` (`profilename`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `status` (
 
 LOCK TABLES `status` WRITE;
 /*!40000 ALTER TABLE `status` DISABLE KEYS */;
-INSERT INTO `status` VALUES (1,'test test','ThuHa219','2020-05-28');
+INSERT INTO `status` VALUES (1,'It\'s beautiful day','Chien4','2020-06-01'),(2,'It\'s awful day','Chien3','2020-06-01'),(3,'It\'s awesome day','Chien2','2020-06-01'),(4,'It\'s fucking day','Chien1','2020-06-01'),(14,'Having a good day','Chien4','2020-06-03'),(15,'Test post stt in profile','Chien4','2020-06-04'),(16,'Test post stt in porfile 2','Chien4','2020-06-04'),(20,'Chien ','Chien5','2020-06-05'),(21,'Hehe','Chien5','2020-06-05'),(22,'Today is a wonderful day !','Chien4','2020-06-06'),(23,'Today is a wonderful day !','Chien4','2020-06-06'),(24,'hu hu hu met qua','Thu Ha','2020-06-06'),(25,'Hello','ThuHa','2020-06-26');
 /*!40000 ALTER TABLE `status` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-29  9:39:45
+-- Dump completed on 2020-06-29  8:40:07

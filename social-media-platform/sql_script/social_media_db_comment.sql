@@ -33,7 +33,7 @@ CREATE TABLE `comment` (
   KEY `comment_status_fk` (`status_id`),
   CONSTRAINT `comment_profile_fk` FOREIGN KEY (`profilename`) REFERENCES `profile` (`profilename`),
   CONSTRAINT `comment_status_fk` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `comment` (
 
 LOCK TABLES `comment` WRITE;
 /*!40000 ALTER TABLE `comment` DISABLE KEYS */;
-INSERT INTO `comment` VALUES (1,'ha ha','2020-05-28','ThuHa219',1),(2,'ha ha','2020-05-28','ThuHa219',1),(3,'ha ha','2020-05-28','ThuHa219',1);
+INSERT INTO `comment` VALUES (1,'Good','2020-06-01','Chien3',1),(2,'Oh noo','2020-06-01','Chien2',1),(3,'Oh noo','2020-06-01','Chien4',1),(4,'Hahaaaaa','2020-06-01','Chien3',1),(5,'Check add cmt ','2020-06-03','Chien1',4),(6,'Hehe','2020-06-03','Chien2',3),(7,'Good jobb','2020-06-03','Chien4',14),(13,'Hehe','2020-06-05','Chien5',20),(15,'Wowww ! It\'s interesting ','2020-06-06','Chien4',22),(16,'I like itttttttttttttttt','2020-06-06','Chien4',22),(17,'Hello! Nice to meet you','2020-06-06','Chien4',22),(18,'hello new friend','2020-06-06','Thu Ha',22),(19,'Hello again','2020-06-26','ThuHa',25);
 /*!40000 ALTER TABLE `comment` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-29  9:39:45
+-- Dump completed on 2020-06-29  8:40:06
